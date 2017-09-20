@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Models;
+using server.Interfaces;
+using Business.Services;
 
 namespace Server
 {
@@ -53,6 +55,8 @@ namespace Server
                 .AddViews()
                 .AddRazorViewEngine()
                 .AddJsonFormatters();
+
+            services.AddSingleton<IContactService, ContactService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory)

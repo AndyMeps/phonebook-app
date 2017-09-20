@@ -16,8 +16,8 @@
 
 ## Time Spent
 
-* Tues 19/09/2017 - 1 hour looking in to my options.
-* Wed 20/09/2017 - 1 hour at lunch, making a start on the project. Evening TBC.
+* Tues 19/09/2017 - 1 hour looking in to my options, no coding.
+* Wed 20/09/2017 - 1 hour at lunch, making a start on the project, 2 hours in the evening.
 * Thur 21/09/2017 - TBC
 * Fri 22/09/2017 - TBC
 * Sat 23/09/2017 - TBC

@@ -168,10 +168,12 @@ namespace server.test.Services
             var service = _getSingleContactService();
 
             // Act
+            var checkExists = service.GetById(1);
             service.DeleteById(1);
             var result = service.GetById(1);
 
             // Assert
+            Assert.NotNull(checkExists);
             Assert.Null(result);
         }
 

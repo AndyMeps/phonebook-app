@@ -96,6 +96,11 @@ namespace Server.Services
                 contact.HomeNumber = homeNumber;
             }
 
+            if (mobileNumber != null)
+            {
+                contact.MobileNumber = mobileNumber;
+            }
+
             if (imageHash != null) {
                 contact.ImageHash = imageHash;
             }

@@ -88,6 +88,93 @@ namespace server.test.Services
             Assert.Equal(2, result);
         }
 
+        [Fact]
+        public void Update_ShouldThrowKeyExceptionIfNoUser()
+        {
+            // Arrange
+            var service = _getEmptyService();
+
+            // Act / Assert
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
+                service.Update(1, "Test2", null, null, null, null, null);
+            });
+        }
+
+        [Fact]
+        public void Update_ShouldUpdateAllFields()
+        {
+            // Arrange
+            var service = _getSingleContactService();
+
+            // Act
+            var result = service.Update(1, "John", "Smith", "john.smith@email.com", "+441227525252", "+441234567890", "image-hash");
+            var foundUpdated = service.GetById(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(foundUpdated);
+            Assert.Equal(foundUpdated.Id, 1);
+            Assert.Equal(foundUpdated.FirstName, "John");
+            Assert.Equal(foundUpdated.LastName, "Smith");
+            Assert.Equal(foundUpdated.Email, "john.smith@email.com");
+            Assert.Equal(foundUpdated.HomeNumber, "+441227525252");
+            Assert.Equal(foundUpdated.MobileNumber, "+441234567890");
+            Assert.Equal(foundUpdated.ImageHash, "image-hash");
+        }
+
+        [Fact]
+        public void Update_ShouldNotUpdateNull()
+        {
+            // Arrange
+            var contacts = new List<Contact>
+            {
+                new Contact(1, "John", "Smith", "john.smith@email.com", "+441227525252", "+441234567890", "image-hash")
+            };
+            var service = new ContactService(contacts);
+
+            // Act
+            var result = service.Update(1, null, null, null, null, null, null);
+            var foundUpdated = service.GetById(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(foundUpdated);
+            Assert.Equal(foundUpdated.Id, 1);
+            Assert.Equal(foundUpdated.FirstName, "John");
+            Assert.Equal(foundUpdated.LastName, "Smith");
+            Assert.Equal(foundUpdated.Email, "john.smith@email.com");
+            Assert.Equal(foundUpdated.HomeNumber, "+441227525252");
+            Assert.Equal(foundUpdated.MobileNumber, "+441234567890");
+            Assert.Equal(foundUpdated.ImageHash, "image-hash");
+        }
+
+        [Fact]
+        public void Delete_ShouldNotThrowIfNotFound()
+        {
+            // Arrange
+            var service = _getEmptyService();
+
+            // Act
+            service.DeleteById(1);
+
+            // Assert - noop
+        }
+
+        [Fact]
+        public void Delete_ShouldRemoveContactIfFound()
+        {
+            // Arrange
+            var service = _getSingleContactService();
+
+            // Act
+            service.DeleteById(1);
+            var result = service.GetById(1);
+
+            // Assert
+            Assert.Null(result);
+        }
+
         /* ============================================================================ */
         /* ========================= HELPER FUNCTIONS BELOW =========================== */
         /* ============================================================================ */

@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.Models;
 using Server.Models.DataTransfer;
-using Business.Services;
+using Server.Services;
 using server.Interfaces;
+using server.Helpers;
 
 namespace Server.Controllers
 {
@@ -31,12 +32,17 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return new JsonResult(_contactService.GetById(id));
+            var contact = _contactService.GetById(id);
+            if (contact == null) return new NotFoundResult();
+
+            return new JsonResult(contact);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody]CreateContactModel model)
         {
+            if (!ModelState.IsValid) return new BadRequestObjectResult(ModelState);
+
             var createdEntity = _contactService.Create(
                 model.FirstName,
                 model.LastName,
@@ -52,9 +58,32 @@ namespace Server.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UpdateContactModel model)
         {
-            var updatedEntity = _contactService.Update(id, model.FirstName, model.LastName, model.Email, model.ImageHash);
+            try
+            {
+                var updatedEntity = _contactService.Update(
+                    id,
+                    model.FirstName,
+                    model.LastName,
+                    model.Email,
+                    model.HomeNumber,
+                    model.MobileNumber,
+                    model.ImageHash
+                );
 
-            return new JsonResult(updatedEntity);
+                return new JsonResult(updatedEntity);
+            }
+            catch (KeyNotFoundException) // Contact not found.
+            {
+                return new JsonErrorResult(ErrorResults.ContactNotFoundResult, System.Net.HttpStatusCode.BadRequest);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _contactService.DeleteById(id);
+
+            return new NoContentResult();
         }
     }
 }

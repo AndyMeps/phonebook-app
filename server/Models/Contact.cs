@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Business.Models
+namespace Server.Models
 {
     public class Contact
     {

@@ -1,13 +1,13 @@
-﻿using Business.Models;
+﻿using Server.Models;
 using server.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Business.Services
+namespace Server.Services
 {
     public class ContactService : IContactService
     {
-        private readonly List<Contact> CONTACTS = new List<Contact> {
+        private readonly List<Contact> _seedContacts = new List<Contact> {
             new Contact {
                 Id = 1,
                 FirstName = "John",
@@ -22,6 +22,13 @@ namespace Business.Services
                 Email = "betty.white@email.com"
             }
         };
+
+        private readonly List<Contact> CONTACTS;
+
+        public ContactService(List<Contact> contacts = null)
+        {
+            CONTACTS = contacts ?? _seedContacts;
+        }
 
         public List<Contact> GetContactList()
         {
@@ -42,7 +49,7 @@ namespace Business.Services
                               string homeNumber, string mobileNumber, 
                               string imageHash)
         {
-            var nextContactId = CONTACTS.Max(c => c.Id) + 1;
+            var nextContactId = CONTACTS.Any() ? CONTACTS.Max(c => c.Id) + 1 : 1;
             var newContact = new Contact(
                 nextContactId,
                 firstName,
@@ -63,18 +70,14 @@ namespace Business.Services
             return CONTACTS.FirstOrDefault(c => c.Id == id);
         }
 
-        public int IndexOf(Contact contact)
-        {
-            return CONTACTS.IndexOf(contact);
-        }
-
         public Contact Update(int id, string firstName, string lastName,
-                              string email, string imageHash)
+                              string email, string homeNumber, string mobileNumber, string imageHash)
         {
             var contact = GetById(id);
 
-            if (contact == null) return null; // Should throw exception.
-            var index = IndexOf(contact);
+            if (contact == null) throw new KeyNotFoundException();
+
+            var index = _indexOf(contact);
 
             if (firstName != null) {
                 contact.FirstName = firstName;
@@ -88,13 +91,32 @@ namespace Business.Services
                 contact.Email = email;
             }
 
+            if (homeNumber != null)
+            {
+                contact.HomeNumber = homeNumber;
+            }
+
             if (imageHash != null) {
                 contact.ImageHash = imageHash;
             }
 
-            CONTACTS[index] = contact; // Gross
+            CONTACTS[index] = contact;
 
             return contact;
+        }
+
+        public void DeleteById(int id)
+        {
+            var contact = GetById(id);
+
+            if (contact == null) return; // No point in throwing, consider it job done!
+
+            CONTACTS.Remove(contact);
+        }
+
+        private int _indexOf(Contact contact)
+        {
+            return CONTACTS.IndexOf(contact);
         }
     }
 }

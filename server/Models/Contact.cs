@@ -11,8 +11,8 @@ namespace Server.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string ImageHash { get; set; }
-        public string HomeNumber {get;set;}
-        public string MobileNumber {get;set;}
+        public string HomeNumber { get; set; }
+        public string MobileNumber { get; set; }
 
         public Contact() { }
 

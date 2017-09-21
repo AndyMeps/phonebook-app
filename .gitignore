@@ -23,3 +23,5 @@ project.lock.json
 
 # Sensitive data
 appsettings.*.json
+
+*.userprefs

@@ -1,14 +1,10 @@
 using System.Collections.Generic;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Server.Models;
-using Server.Models.DataTransfer;
-using Server.Services;
-using server.Interfaces;
 using server.Helpers;
+using server.Interfaces;
+using Server.Models.DataTransfer;
 
 namespace Server.Controllers
 {
@@ -26,7 +22,17 @@ namespace Server.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return new JsonResult(_contactService.GetContactList());
+            var namesOnly = _contactService.GetContactList().Select(c =>
+            {
+                return new
+                {
+                    c.Id,
+                    c.FirstName,
+                    c.LastName
+                };
+            });
+
+            return new JsonResult(namesOnly);
         }
 
         [HttpGet("{id}")]

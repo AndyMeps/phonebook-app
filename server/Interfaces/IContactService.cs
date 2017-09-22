@@ -1,10 +1,11 @@
-﻿using Server.Models;
+﻿using Server.Models.DataTransfer;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace server.Interfaces
+namespace Server.Interfaces
 {
     public interface IContactService
     {
@@ -12,7 +13,7 @@ namespace server.Interfaces
         /// Get the contact list.
         /// </summary>
         /// <returns>The contact list.</returns>
-        List<Contact> GetContactList();
+        IEnumerable<SimpleContactModel> GetContactList();
 
         /// <summary>
         /// Create a new contact.

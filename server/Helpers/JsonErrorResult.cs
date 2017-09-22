@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace server.Helpers
+namespace Server.Helpers
 {
     /// <summary>
     /// Lifted from https://stackoverflow.com/questions/11370251/return-json-with-error-status-code-mvc/11443564

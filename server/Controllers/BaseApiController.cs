@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.Models;
 using Server.Services;
-using server.Interfaces;
+using Server.Interfaces;
 
 namespace Server.Controllers
 {

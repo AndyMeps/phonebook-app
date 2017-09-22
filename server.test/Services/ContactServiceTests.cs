@@ -1,13 +1,19 @@
-﻿using server.Interfaces;
+﻿using Server.DataLayer;
+using Server.Interfaces;
 using Server.Models;
 using Server.Services;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
-
-
-namespace server.test.Services
+namespace Server.test.Services
 {
+    /// <summary>
+    /// DISCLAIMER:
+    /// 
+    /// I'm currently testing the ContactProvider at the same time, if I've got time 
+    /// I'll test seperately but there is a chance I'll leave it as-is.
+    /// </summary>
     public class ContactServiceTests
     {
         [Fact]
@@ -17,23 +23,10 @@ namespace server.test.Services
             var service = _getSingleContactService();
 
             // Act
-            var result = service.GetContactList().Count;
+            var result = service.GetContactList().ToList().Count;
 
             // Assert
             Assert.Equal(1, result);
-        }
-
-        [Fact]
-        public void GetAll_ShouldReturnSeedDataIfNotPassedIn()
-        {
-            // Arrange
-            var service = new ContactService();
-
-            // Act
-            var result = service.GetContactList().Count;
-
-            // Assert
-            Assert.Equal(2, result);
         }
 
         [Fact]
@@ -131,7 +124,7 @@ namespace server.test.Services
             {
                 new Contact(1, "John", "Smith", "john.smith@email.com", "+441227525252", "+441234567890", "image-hash")
             };
-            var service = new ContactService(contacts);
+            var service = new ContactService(new ContactProvider(contacts));
 
             // Act
             var result = service.Update(1, null, null, null, null, null, null);
@@ -187,7 +180,7 @@ namespace server.test.Services
         private IContactService _getEmptyService()
         {
             var contacts = new List<Contact>();
-            return new ContactService(contacts);
+            return new ContactService(new ContactProvider(contacts));
         }
 
         /// <summary>
@@ -200,7 +193,7 @@ namespace server.test.Services
                 new Contact(1, "Test", "Contact")
             };
 
-            return new ContactService(contacts);
+            return new ContactService(new ContactProvider(contacts));
         }
     }
 }

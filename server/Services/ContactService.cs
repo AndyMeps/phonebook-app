@@ -1,75 +1,60 @@
 ﻿using Server.Models;
-using server.Interfaces;
+using Server.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using Server.Models.DataTransfer;
 
 namespace Server.Services
 {
     public class ContactService : IContactService
     {
-        private readonly List<Contact> _seedContacts = new List<Contact> {
-            new Contact {
-                Id = 1,
-                FirstName = "John",
-                LastName = "Smith",
-                Email = "john.smith@email.com"
-            },
-            new Contact {
-                Id = 2,
-                FirstName = "Betty",
-                LastName = "White",
-                MobileNumber = "+447654292101",
-                Email = "betty.white@email.com"
-            }
-        };
+        private readonly IContactProvider _contactProvider;
 
-        private readonly List<Contact> CONTACTS;
-
-        public ContactService(List<Contact> contacts = null)
+        public ContactService(IContactProvider contactProvider)
         {
-            CONTACTS = contacts ?? _seedContacts;
+            _contactProvider = contactProvider;
         }
 
-        public List<Contact> GetContactList()
+        /// <summary>
+        /// Get all Contacts.
+        /// </summary>
+        public IEnumerable<SimpleContactModel> GetContactList()
         {
-            return CONTACTS;
+            return _contactProvider.All().Select(c => {
+                return new SimpleContactModel { Id = c.Id.Value, FirstName = c.FirstName, LastName = c.LastName };
+            });
         }
 
         /// <summary>
         /// Create a new Contact.
         /// </summary>
-        /// <returns>The created contact.</returns>
-        /// <param name="firstName">First name of contact.</param>
-        /// <param name="lastName">Last name of contact.</param>
-        /// <param name="email">Email of contact.</param>
-        /// <param name="homeNumber">Home number of contact.</param>
-        /// <param name="mobileNumber">Mobile number of contact.</param>
-        /// <param name="imageHash">Image hash of contact.</param>
         public Contact Create(string firstName, string lastName, string email,
                               string homeNumber, string mobileNumber, 
                               string imageHash)
         {
-            var nextContactId = CONTACTS.Any() ? CONTACTS.Max(c => c.Id) + 1 : 1;
-            var newContact = new Contact(
-                nextContactId,
+            var newContact = _contactProvider.Create(new Contact(
                 firstName,
                 lastName,
                 email,
                 homeNumber,
                 mobileNumber,
                 imageHash
-            );
-
-            CONTACTS.Add(newContact);
+            ));
             
             return newContact;
         }
 
+        /// <summary>
+        /// Get a single contact based on Id.
+        /// </summary>
         public Contact GetById(int id)
         {
-            return CONTACTS.FirstOrDefault(c => c.Id == id);
+            return _contactProvider.FindById(id);
         }
 
+        /// <summary>
+        /// Update a single contact based on Id.
+        /// </summary>
         public Contact Update(int id, string firstName, string lastName,
                               string email, string homeNumber, string mobileNumber, string imageHash)
         {
@@ -77,51 +62,31 @@ namespace Server.Services
 
             if (contact == null) throw new KeyNotFoundException();
 
-            var index = _indexOf(contact);
+            // Probably the neater option based on required logic, in reality using
+            // EF or another ORM could handle this internally inside the Data Layer
+            // rather than manually in the service.
+            contact.FirstName = firstName ?? contact.FirstName;
+            contact.LastName = lastName ?? contact.LastName;
+            contact.Email = email ?? contact.Email;
+            contact.HomeNumber = homeNumber ?? contact.HomeNumber;
+            contact.MobileNumber = mobileNumber ?? contact.MobileNumber;
+            contact.ImageHash = imageHash ?? contact.ImageHash;
 
-            if (firstName != null) {
-                contact.FirstName = firstName;
-            }
-
-            if (lastName != null) {
-                contact.LastName = lastName;
-            }
-
-            if (email != null) {
-                contact.Email = email;
-            }
-
-            if (homeNumber != null)
-            {
-                contact.HomeNumber = homeNumber;
-            }
-
-            if (mobileNumber != null)
-            {
-                contact.MobileNumber = mobileNumber;
-            }
-
-            if (imageHash != null) {
-                contact.ImageHash = imageHash;
-            }
-
-            CONTACTS[index] = contact;
+            _contactProvider.Update(contact);
 
             return contact;
         }
 
+        /// <summary>
+        /// Delete a single contact based on Id.
+        /// </summary>
         public void DeleteById(int id)
         {
-            var contact = GetById(id);
+            var contact = _contactProvider.FindById(id);
 
             if (contact == null) return; // No point in throwing, consider it job done!
 
-            CONTACTS.Remove(contact);
-        }
-
-        private int _indexOf(Contact contact)
-        {
-            return CONTACTS.IndexOf(contact);
+            _contactProvider.Delete(contact);
         }
     }
 }

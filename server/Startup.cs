@@ -12,8 +12,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Models;
-using server.Interfaces;
+using Server.Interfaces;
 using Server.Services;
+using Server;
+using Server.DataLayer;
 
 namespace Server
 {
@@ -56,7 +58,9 @@ namespace Server
                 .AddRazorViewEngine()
                 .AddJsonFormatters();
 
-            services.AddSingleton<IContactService, ContactService>();
+            services.AddSingleton<IContactProvider>(new ContactProvider(SeedData.Contacts));
+            services.AddTransient<IContactService, ContactService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory factory)

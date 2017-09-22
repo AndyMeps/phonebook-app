@@ -6,7 +6,7 @@ namespace Server.Models
 {
     public class Contact
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -16,7 +16,12 @@ namespace Server.Models
 
         public Contact() { }
 
-        public Contact(int id, string firstName, string lastName, string email = null,
+        public Contact(string firstName, string lastName, string email = null,
+            string homeNumber = null, string mobileNumber = null, string imageHash = null)
+            : this(null, firstName, lastName, email, homeNumber, mobileNumber, imageHash)
+        {  }
+
+        public Contact(int? id, string firstName, string lastName, string email = null,
             string homeNumber = null, string mobileNumber = null, string imageHash = null)
         {
             Id = id;

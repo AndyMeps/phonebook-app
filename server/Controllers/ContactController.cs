@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using server.Helpers;
-using server.Interfaces;
+using Server.Helpers;
+using Server.Interfaces;
 using Server.Models.DataTransfer;
 
 namespace Server.Controllers
@@ -22,15 +22,7 @@ namespace Server.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var namesOnly = _contactService.GetContactList().Select(c =>
-            {
-                return new
-                {
-                    c.Id,
-                    c.FirstName,
-                    c.LastName
-                };
-            });
+            var namesOnly = _contactService.GetContactList();
 
             return new JsonResult(namesOnly);
         }

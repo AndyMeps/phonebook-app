@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import styled from 'styled-components';
 import Label from '../atoms/label';
 import Button from '../atoms/button';
+import history from '../../history';
 
 const ContactCardContainer = styled.div`
-  width: 45%;
+  @media (min-width: 800px) {
+    width: 45%;
+  }
+
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 1rem;
@@ -25,24 +29,45 @@ const contactNameStyle = {
 };
 
 class ContactCard extends React.Component {
+  renderDetail() {
+    const { firstName, lastName, imageSource } = this.props.contact;
+    const imageToUse = imageSource || 'http://via.placeholder.com/50x50';
+
+    return (
+      <div className="contact-detail">
+        <img src={imageToUse} alt="Contact" style={{ width: '50px', height: '50px' }} />
+        <Label style={contactNameStyle}>{firstName} {lastName}</Label>
+      </div>
+    );
+  }
+
+  renderOptions() {
+    const { handleEditClick } = this.props;
+
+    return (
+      <ContactOptions>
+        <Button onClick={() => handleEditClick(this.props.contact.id)}>Edit</Button>
+      </ContactOptions>
+    );
+  }
+
   render() {
-    const { id, firstName, lastName } = this.props.contact;
     return (
       <ContactCardContainer>
-        <div className="contact-detail">
-          <img src="http://via.placeholder.com/50x50" alt="Contact" />
-          <Label style={contactNameStyle}>{firstName} {lastName}</Label>
-        </div>
-        <ContactOptions>
-          <Button onClick={() => { console.log(`clicked: ${id}`); }}>Edit</Button>
-        </ContactOptions>
+        {this.renderDetail()}
+        {this.renderOptions()}
       </ContactCardContainer>
     );
   }
 }
 
 ContactCard.propTypes = {
-  contact: PropTypes.shape({ id: PropTypes.number, firstName: PropTypes.string, lastName: PropTypes.string }).isRequired,
+  contact: PropTypes.shape({
+    id: PropTypes.number,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    imageSource: PropTypes.string }).isRequired,
+  handleEditClick: PropTypes.func.isRequired,
 };
 
 export default ContactCard;

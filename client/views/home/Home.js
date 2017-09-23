@@ -8,20 +8,21 @@
  */
 
 import React, { PropTypes } from 'react';
-
-const title = 'ASP.NET Core Starter Kit';
+import Contacts from '../../components/layouts/contacts';
 
 class Home extends React.Component {
 
   static propTypes = {};
 
   componentDidMount() {
-    document.title = title;
+    document.title = 'Phonebook';
   }
 
   render() {
     return (
-      <p>Hello, world!</p>
+      <div>
+        <Contacts />
+      </div>
     );
   }
 }

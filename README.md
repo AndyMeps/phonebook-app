@@ -5,16 +5,6 @@
 ### Hosted on Azure
 Go to [http://phonebook-app-mepham.azurewebsites.net/](http://phonebook-app-mepham.azurewebsites.net/).
 
-## API Interface
-
-| Endpoint        | Method | Description                 | Request Example                                                               | Response Example                                                                      |
-|-----------------|--------|-----------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
-| /api/contacts   | GET    | Returns all contacts.       | N/A                                                                           | `[{"id":1,"firstName":"John","lastName":"Smith"}]`                                    |
-| /api/contacts   | POST   | Create a new contact.       | `{"firstName": "Emma","lastName": "Reeves","email": "emma.reeves@email.com"}` | `{"id": 2,"firstName": "Emma","lastName": "Reeves","email": "emma.reeves@email.com"}` |
-| /api/contacts/1 | GET    | Returns a specific contact. | N/A                                                                           | `{"id": 2,"firstName": "Emma","lastName": "Reeves","email": "emma.reeves@email.com"}` |
-| /api/contacts/1 | PUT    | Updates a specific contact. | `{"firstName":"James"}`                                                       | `{"id":1,"firstName":"James","lastName":"Smith"}`                                     |
-| /api/contacts/1 | DELETE | Deletes a specific contact. | N/A                                                                           | N/A                                                                                   |
-
 ### Locally
 * Go to the root directory of the project with terminal.
 * Run `npm i` to install NodeJS and .NET dependencies.
@@ -23,6 +13,17 @@ Go to [http://phonebook-app-mepham.azurewebsites.net/](http://phonebook-app-meph
   * Run `webpack` (requires webpack installed globally)
   * Open the .NET solution (starter-kit.sln) and hit F5.
   * The website should open in your browser.
+
+## API Interface
+
+| Endpoint        | Method | Description                 | Request Example                                                               | Response Example                                                                      |
+|-----------------|--------|-----------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| /api/contacts   | GET    | Returns all contacts.       | N/A                                                                           | `[{"id":1,"firstName":"John","lastName":"Smith"}]`                                    |
+| /api/contacts   | POST   | Create a new contact.       | `{"firstName": "Emma", "lastName": "Reeves", "email": "emma.reeves@email.com"}` | `{"id": 2,"firstName": "Emma","lastName": "Reeves","email": "emma.reeves@email.com"}` |
+| /api/contacts/1 | GET    | Returns a specific contact. | N/A                                                                           | `{"id": 2,"firstName": "Emma","lastName": "Reeves","email": "emma.reeves@email.com"}` |
+| /api/contacts/1 | PUT    | Updates a specific contact. | `{"firstName":"James"}`                                                       | `{"id":1,"firstName":"James","lastName":"Smith"}`                                     |
+| /api/contacts/1 | DELETE | Deletes a specific contact. | N/A                                                                           | N/A                                                                                   |
+
 
 ## Happy With:
 * Ability to use Singleton dependencies to create an in-memory data store.

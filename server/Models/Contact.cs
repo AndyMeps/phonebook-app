@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using Server.Models.DataTransfer;
 
 namespace Server.Models
 {
@@ -32,5 +34,27 @@ namespace Server.Models
             MobileNumber = mobileNumber;
             ImageHash = imageHash;
         }
+    }
+
+    /// <summary>
+    /// Helper methods relating to the Contact entity.
+    /// </summary>
+    public static class ContactExtensions {
+		/// <summary>
+		/// Takes an IEnumerable of Contacts and returns an IEnumerable of SimpleContacts.
+		/// </summary>
+		public static IEnumerable<SimpleContactModel> ToSummary(this IEnumerable<Contact> contacts)
+		{
+			return contacts.Select(c =>
+			{
+				return new SimpleContactModel
+				{
+					Id = c.Id.Value,
+					FirstName = c.FirstName,
+					LastName = c.LastName,
+					ImageSource = c.ImageHash
+				};
+			});
+		}
     }
 }

@@ -17,6 +17,13 @@ const ContactCardContainer = styled.div`
   padding: 5px;
   display: flex;
   justify-content: space-between;
+  transition: background-color 1s;
+
+  &:hover{
+    cursor: pointer;
+    background-color: #eee;
+    transition: background-color 1s;
+  }
 `;
 
 const ContactOptions = styled.div`
@@ -31,12 +38,12 @@ const contactNameStyle = {
 class ContactCard extends React.Component {
   renderDetail() {
     const { firstName, lastName, imageSource } = this.props.contact;
-    const imageToUse = imageSource || 'http://via.placeholder.com/50x50';
+    const imageToUse = imageSource || 'http://www.pieglobal.com/wp-content/uploads/2015/10/placeholder-user.png';
 
     return (
-      <div className="contact-detail">
-        <img src={imageToUse} alt="Contact" style={{ width: '50px', height: '50px' }} />
-        <Label style={contactNameStyle}>{firstName} {lastName}</Label>
+      <div className="contact-detail" data-showdetails>
+        <img src={imageToUse} alt="Contact" data-showdetails style={{ width: '50px', height: '50px' }} />
+        <Label style={contactNameStyle} data-showdetails>{firstName} {lastName}</Label>
       </div>
     );
   }
@@ -45,15 +52,23 @@ class ContactCard extends React.Component {
     const { handleEditClick } = this.props;
 
     return (
-      <ContactOptions>
+      <ContactOptions data-showdetails>
         <Button onClick={() => handleEditClick(this.props.contact.id)}>Edit</Button>
       </ContactOptions>
     );
   }
 
   render() {
+    const handleContainerClick = (evt) => {
+      if (evt.target.dataset
+        && Object.keys(evt.target.dataset).length > 0
+        && evt.target.dataset.showdetails) {
+        this.props.handleViewClick(this.props.contact.id);
+      }
+    };
+
     return (
-      <ContactCardContainer>
+      <ContactCardContainer onClick={handleContainerClick} data-showdetails>
         {this.renderDetail()}
         {this.renderOptions()}
       </ContactCardContainer>
@@ -68,6 +83,7 @@ ContactCard.propTypes = {
     lastName: PropTypes.string,
     imageSource: PropTypes.string }).isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  handleViewClick: PropTypes.func.isRequired,
 };
 
 export default ContactCard;

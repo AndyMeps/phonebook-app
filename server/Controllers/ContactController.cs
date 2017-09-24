@@ -50,7 +50,7 @@ namespace Server.Controllers
                 model.ImageHash
             );
 
-            return new JsonResult(createdEntity);
+            return new CreatedResult($"/api/contacts/{createdEntity.Id}", createdEntity);
         }
 
         [HttpPut("{id}")]

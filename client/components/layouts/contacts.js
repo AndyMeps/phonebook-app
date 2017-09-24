@@ -12,12 +12,27 @@ const Wrapper = styled.div`
 `;
 
 class Contacts extends React.Component {
+  handleFilter(contact) {
+    const { filter } = this.props;
+    const { firstName, lastName } = contact;
+    const lowerFilter = filter.toLowerCase();
+    const lowerFirst = firstName.toLowerCase();
+    const lowerLast = lastName.toLowerCase();
+
+    return (lowerFirst.indexOf(lowerFilter) !== -1) ||
+           (lowerLast.indexOf(lowerFilter) !== -1);
+  }
+
   renderContacts() {
     if (this.props.contacts.length === 0) return 'No contacts.';
 
-    return this.props.contacts.map(contact => (
-      <ContactCard contact={contact} key={contact.id} handleEditClick={this.props.handleEditContactClick} />
-      ),
+    return this.props.contacts.filter(c => this.handleFilter(c)).map(contact => (
+      <ContactCard
+        contact={contact}
+        key={contact.id}
+        handleEditClick={this.props.handleEditContactClick}
+        handleViewClick={this.props.handleViewContactClick}
+      />),
     );
   }
   render() {
@@ -31,9 +46,11 @@ class Contacts extends React.Component {
 
 Contacts.defaultProps = {
   contacts: [],
+  filter: '',
 };
 
 Contacts.propTypes = {
+  filter: PropTypes.string,
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -42,6 +59,7 @@ Contacts.propTypes = {
       imageSource: PropTypes.string,
     })),
   handleEditContactClick: PropTypes.func.isRequired,
+  handleViewContactClick: PropTypes.func.isRequired,
 };
 
 export default Contacts;

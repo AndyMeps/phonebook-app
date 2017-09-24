@@ -20,9 +20,7 @@ namespace Server.Services
         /// </summary>
         public IEnumerable<SimpleContactModel> GetContactList()
         {
-            return _contactProvider.All().Select(c => {
-                return new SimpleContactModel { Id = c.Id.Value, FirstName = c.FirstName, LastName = c.LastName };
-            });
+            return _contactProvider.All().ToSummary();
         }
 
         /// <summary>

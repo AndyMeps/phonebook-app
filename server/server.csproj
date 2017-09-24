@@ -45,4 +45,7 @@
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Models\DatabaseContext.cs" />
+  </ItemGroup>
 </Project>

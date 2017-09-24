@@ -41,19 +41,7 @@ namespace Server
             // https://docs.asp.net/en/latest/security/anti-request-forgery.html
             services.AddAntiforgery(options => options.CookieName =  options.HeaderName = "X-XSRF-TOKEN");
 
-            // Register Entity Framework database context
-            // https://docs.efproject.net/en/latest/platforms/aspnetcore/new-db.html
-            services.AddDbContext<DatabaseContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders();
-
             services.AddMvcCore()
-                .AddAuthorization()
                 .AddViews()
                 .AddRazorViewEngine()
                 .AddJsonFormatters();
@@ -73,22 +61,6 @@ namespace Server
             // Serve static files
             // https://docs.asp.net/en/latest/fundamentals/static-files.html
             app.UseStaticFiles();
-
-            // Enable external authentication provider(s)
-            // https://docs.asp.net/en/latest/security/authentication/sociallogins.html
-            app.UseIdentity();
-
-            if (!string.IsNullOrEmpty(Configuration["Authentication:Facebook:AppId"]))
-            {
-                app.UseFacebookAuthentication(new FacebookOptions
-                {
-                    AppId = Configuration["Authentication:Facebook:AppId"],
-                    AppSecret = Configuration["Authentication:Facebook:AppSecret"],
-                    Scope = { "email" },
-                    Fields = { "name", "email" },
-                    SaveTokens = true,
-                });
-            }
 
             // Configure ASP.NET MVC
             // https://docs.asp.net/en/latest/mvc/index.html
